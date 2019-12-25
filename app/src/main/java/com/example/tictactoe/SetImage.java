@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,6 +34,9 @@ public class SetImage extends AppCompatActivity {
 
         Picasso.with(this).load(PlayerInfo.img1).centerCrop().resize(350, 350).into(image1);
         Picasso.with(this).load(PlayerInfo.img2).centerCrop().resize(350, 350).into(image2);
+
+        registerForContextMenu(image1);
+        registerForContextMenu(image2);
 
         image1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +67,8 @@ public class SetImage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PlayerInfo.setToDefault();
-                startActivity(new Intent(SetImage.this, MainActivity.class));
+                Picasso.with(getBaseContext()).load(PlayerInfo.img1).centerCrop().resize(350, 350).into(image1);
+                Picasso.with(getBaseContext()).load(PlayerInfo.img2).centerCrop().resize(350, 350).into(image2);
             }
         });
     }
@@ -82,5 +88,26 @@ public class SetImage extends AppCompatActivity {
             Picasso.with(this).load(imgFromGallery).centerCrop().resize(350, 350).into(called == 1 ? image1 : image2);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.changeImage:
+                pickImage();
+                break;
+            case R.id.resetToDefault:
+                PlayerInfo.setToDefault(called);
+                if(called == 1) Picasso.with(this).load(PlayerInfo.img1).centerCrop().resize(350, 350).into(image1);
+                else Picasso.with(this).load(PlayerInfo.img2).centerCrop().resize(350, 350).into(image2);
+        }
+        return super.onContextItemSelected(item);
     }
 }

@@ -14,4 +14,10 @@ public class PlayerInfo {
         img1 = Uri.parse("android.resource://com.example.tictactoe/drawable/insta");
         img2 = Uri.parse("android.resource://com.example.tictactoe/drawable/youtube");
     }
+
+    public static void setToDefault(int i)
+    {
+        if(i == 1) img1 = Uri.parse("android.resource://com.example.tictactoe/drawable/insta");
+        else img2 = Uri.parse("android.resource://com.example.tictactoe/drawable/youtube");
+    }
 }
